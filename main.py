@@ -1,109 +1,60 @@
 import flet as ft
 
 def main(page: ft.Page):
-    page.title = "Volleyball Pro"
-    page.bgcolor = "#0F172A"
-    page.padding = 0
+    page.title = "VOLLEYBALL PRO"
+    page.bgcolor = "#10182E"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    team_a = ft.TextField(value="TEAM A", width=130, text_align=ft.TextAlign.CENTER, text_style=ft.TextStyle(color="white"))
-    team_b = ft.TextField(value="TEAM B", width=130, text_align=ft.TextAlign.CENTER, text_style=ft.TextStyle(color="white"))
+    team_a_name = ft.TextField(value="Team A", text_align="center", width=140, color="white", border_color="#FFFFFF20", bgcolor="#1A233F")
+    team_b_name = ft.TextField(value="Team B", text_align="center", width=140, color="white", border_color="#FFFFFF20", bgcolor="#1A233F")
 
-    score_a = ft.Text("0", size=80, color="#22D3EE", weight=ft.FontWeight.BOLD)
-    score_b = ft.Text("0", size=80, color="#F472B6", weight=ft.FontWeight.BOLD)
-    sets_a = ft.Text("Sets: 0", color="white")
-    sets_b = ft.Text("Sets: 0", color="white")
-    info = ft.Text("First to 25, Win by 2 | Best of 3", color="grey", size=11, text_align=ft.TextAlign.CENTER)
-    history = ft.Column([], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=5)
-
-    sa = 0
-    sb = 0
-    set_a = 0
-    set_b = 0
-
-    def win_check():
-        nonlocal sa, sb, set_a, set_b
-        if (sa >= 25 or sb >= 25) and abs(sa - sb) >= 2:
-            # Team name empty නම් default දාන්න
-            name_a = team_a.value.strip() if team_a.value.strip() else "TEAM A"
-            name_b = team_b.value.strip() if team_b.value.strip() else "TEAM B"
-            
-            history.controls.append(ft.Text(f"{name_a} {sa}-{sb} {name_b}", color="white", size=13))
-            if sa > sb:
-                set_a += 1
-            else:
-                set_b += 1
-            
-            sets_a.value = f"Sets: {set_a}"
-            sets_b.value = f"Sets: {set_b}"
-            sa = 0
-            sb = 0
-            score_a.value = "0"
-            score_b.value = "0"
-            
-            if set_a == 2 or set_b == 2:
-                winner = name_a if set_a == 2 else name_b
-                info.value = f"🏆 {winner} WON THE MATCH!"
-                info.color = "yellow"
-                info.size = 18
-
-    def add_a(e): 
-        nonlocal sa
-        sa += 1
-        score_a.value = str(sa)
-        win_check()
+    score_a = ft.Text("0", size=90, color="#38BDF8", weight="bold")
+    score_b = ft.Text("0", size=90, color="#F472B6", weight="bold")
+    
+    def add_a(e):
+        score_a.value = str(int(score_a.value) + 1)
         page.update()
-
     def sub_a(e):
-        nonlocal sa
-        if sa > 0:
-            sa -= 1
-            score_a.value = str(sa)
+        if int(score_a.value) > 0:
+            score_a.value = str(int(score_a.value) - 1)
             page.update()
-
     def add_b(e):
-        nonlocal sb
-        sb += 1
-        score_b.value = str(sb)
-        win_check()
+        score_b.value = str(int(score_b.value) + 1)
         page.update()
-
     def sub_b(e):
-        nonlocal sb
-        if sb > 0:
-            sb -= 1
-            score_b.value = str(sb)
+        if int(score_b.value) > 0:
+            score_b.value = str(int(score_b.value) - 1)
             page.update()
-
-    def reset(e):
-        nonlocal sa, sb, set_a, set_b
-        sa = 0; sb = 0; set_a = 0; set_b = 0
-        score_a.value = "0"; score_b.value = "0"
-        sets_a.value = "Sets: 0"; sets_b.value = "Sets: 0"
-        history.controls.clear()
-        info.value = "First to 25, Win by 2 | Best of 3"
-        info.color = "grey"
-        info.size = 11
+    def new_match(e):
+        score_a.value = "0"
+        score_b.value = "0"
         page.update()
 
-    main_content = ft.Container(
-        content=ft.Column([
-            ft.Text("VOLLEYBALL PRO", color="white", weight=ft.FontWeight.BOLD, size=22),
-            info,
-            ft.Row([team_a, ft.Text("VS", color="white"), team_b], alignment=ft.MainAxisAlignment.CENTER),
-            ft.Row([
-                ft.Column([sets_a, score_a, ft.Row([ft.ElevatedButton("-", on_click=sub_a), ft.ElevatedButton("+", on_click=add_a)], alignment=ft.MainAxisAlignment.CENTER)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                ft.Text(":", color="white", size=40),
-                ft.Column([sets_b, score_b, ft.Row([ft.ElevatedButton("-", on_click=sub_b), ft.ElevatedButton("+", on_click=add_b)], alignment=ft.MainAxisAlignment.CENTER)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            ], alignment=ft.MainAxisAlignment.CENTER),
-            history,
-            ft.ElevatedButton("NEW MATCH", bgcolor="#EF4444", color="white", on_click=reset)
-        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=18, scroll=ft.ScrollMode.AUTO, expand=True),
-        padding=20,
-        bgcolor="#0F172A",
-        expand=True
+    content = ft.Column(
+        [
+            ft.Text("VOLLEYBALL PRO", size=24, weight="bold", color="white"),
+            ft.Text("First to 25, Win by 2 | Best of 3", size=12, color="grey"),
+            ft.Text("Tap team name to edit", size=10, color="grey"),
+            ft.Row([team_a_name, ft.Text("VS", color="white"), team_b_name], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Row([ft.Text("Sets: 0", color="white"), ft.Text("Sets: 0", color="white")], alignment=ft.MainAxisAlignment.SPACE_AROUND, width=350),
+            ft.Row([score_a, ft.Text(":", size=40, color="white"), score_b], alignment=ft.MainAxisAlignment.SPACE_AROUND, width=350),
+            ft.Row(
+                [
+                    ft.ElevatedButton("-", on_click=sub_a, width=80, bgcolor="white"),
+                    ft.ElevatedButton("+", on_click=add_a, width=80, bgcolor="white"),
+                    ft.Container(width=20),
+                    ft.ElevatedButton("-", on_click=sub_b, width=80, bgcolor="white"),
+                    ft.ElevatedButton("+", on_click=add_b, width=80, bgcolor="white"),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            ),
+            ft.ElevatedButton("NEW MATCH", on_click=new_match, bgcolor="#EF4444", color="white", style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=20)))
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        spacing=18,
     )
-
-    page.add(main_content)
+    page.add(content)
 
 ft.app(target=main)
