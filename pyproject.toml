@@ -1,0 +1,11 @@
+[project]
+name = "volleyball-final-pro"
+version = "1.0.0"
+description = "Volleyball Pro"
+dependencies = ["flet==0.28.3"]
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.flet]
+app_name = "Volleyball Pro"
+app_icon = "assets/icon.png"
